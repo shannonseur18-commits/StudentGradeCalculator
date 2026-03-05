@@ -178,15 +178,28 @@
       resultBox.style.display = 'none';
 
       // VALIDATION - same rules as the C# constructor
+
+      // Check name is not empty
       if (!name) {
         showError("Student name cannot be empty."); return;
       }
+
+      // Check name has no numbers
       if (/\d/.test(name)) {
         showError("Student name cannot contain numbers."); return;
       }
-      if (name.length < 2) {
-    showError("Student name must be at least 2 characters."); return;
-      } 
+
+      // Check name is at least 3 characters
+      if (name.length < 3) {
+        showError("Student name must be at least 3 characters."); return;
+      }
+
+      // Check name has at least one vowel - TTT, QQQ etc are not real names
+      if (!/[aeiouAEIOU]/.test(name)) {
+        showError("Please enter a valid name."); return;
+      }
+
+      // Check marks are valid numbers between 0 and 100
       if (isNaN(mark1) || mark1 < 0 || mark1 > 100) {
         showError("Subject 1 mark must be between 0 and 100."); return;
       }
@@ -229,6 +242,4 @@
     }
   </script>
 </body>
-
 </html>
-
