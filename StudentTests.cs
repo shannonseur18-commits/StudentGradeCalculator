@@ -7,7 +7,7 @@ public class StudentTests
     [Test]
     public void CalculateAverage_ThreeMarks_ReturnsCorrectAverage()
     {
-        // Arrange - your own example: 60 + 75 + 80 = 215 / 3 = 71.6
+        // Arrange - 60 + 75 + 80 = 215 / 3 = 71.6
         Student student = new Student("Shannon", 60, 75, 80);
         // Act
         double average = student.CalculateAverage();
@@ -79,16 +79,25 @@ public class StudentTests
         {
             Student student = new Student("Shannon", -10, 75, 80);
         });
-        
-        // TEST 8: Single letter name should throw error
-[Test]
-public void Constructor_SingleLetterName_ThrowsException()
-{
-    Assert.Throws<ArgumentException>(() =>
+    }
+
+    // TEST 8: Name less than 3 characters throws error
+    [Test]
+    public void Constructor_ShortName_ThrowsException()
     {
-        Student student = new Student("S", 60, 75, 80);
-    });
-}
+        Assert.Throws<ArgumentException>(() =>
+        {
+            Student student = new Student("SS", 60, 75, 80);
+        });
+    }
+
+    // TEST 9: Name with no vowels throws error - TTT, QQQ are not real names
+    [Test]
+    public void Constructor_NoVowelsInName_ThrowsException()
+    {
+        Assert.Throws<ArgumentException>(() =>
+        {
+            Student student = new Student("TTT", 60, 75, 80);
+        });
     }
 }
-
