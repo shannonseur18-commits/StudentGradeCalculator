@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Grade Calculator</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f4f8;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 480px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+    }
+
+    h1 {
+      font-size: 22px;
+      color: #1a2f6e;
+      margin-bottom: 6px;
+    }
+
+    p.subtitle {
+      font-size: 13px;
+      color: #888;
+      margin-bottom: 28px;
+    }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid #dde3f0;
+      border-radius: 8px;
+      font-size: 14px;
+      margin-bottom: 18px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input:focus { border-color: #1a2f6e; }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: #1a2f6e;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 4px;
+    }
+
+    button:hover { background: #2a4aad; }
+
+    .error {
+      background: #fde8e8;
+      color: #c81e1e;
+      border: 1px solid #f5c0c0;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 13px;
+      margin-top: 16px;
+      display: none;
+    }
+
+    .result {
+      margin-top: 24px;
+      background: #f0f4ff;
+      border: 1.5px solid #c0ccf5;
+      border-radius: 12px;
+      padding: 24px;
+      display: none;
+    }
+
+    .result h2 {
+      font-size: 16px;
+      color: #1a2f6e;
+      margin-bottom: 16px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #dde3f0;
+    }
+
+    .result-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: #444;
+    }
+
+    .result-row span:last-child { font-weight: 700; color: #1a2f6e; }
+
+    .grade-badge {
+      display: inline-block;
+      padding: 6px 20px;
+      border-radius: 20px;
+      font-size: 28px;
+      font-weight: 800;
+      margin-top: 12px;
+    }
+
+    .grade-A { background: #d4f8e8; color: #057a55; }
+    .grade-B { background: #dbeafe; color: #1a56db; }
+    .grade-C { background: #fef3e2; color: #c27803; }
+    .grade-D { background: #ffe4cc; color: #d05a00; }
+    .grade-F { background: #fde8e8; color: #c81e1e; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🎓 Student Grade Calculator</h1>
+    <p class="subtitle">Enter the student details below to calculate the grade</p>
+
+    <label>Student Name</label>
+    <input type="text" id="name" placeholder="e.g. Shannon">
+
+    <label>Subject 1 Mark (0 - 100)</label>
+    <input type="number" id="mark1" placeholder="e.g. 60">
+
+    <label>Subject 2 Mark (0 - 100)</label>
+    <input type="number" id="mark2" placeholder="e.g. 75">
+
+    <label>Subject 3 Mark (0 - 100)</label>
+    <input type="number" id="mark3" placeholder="e.g. 80">
+
+    <button onclick="calculate()">Calculate Grade</button>
+
+    <div class="error" id="error"></div>
+
+    <div class="result" id="result">
+      <h2>📋 Result</h2>
+      <div class="result-row"><span>Student Name</span><span id="res-name"></span></div>
+      <div class="result-row"><span>Subject 1</span><span id="res-mark1"></span></div>
+      <div class="result-row"><span>Subject 2</span><span id="res-mark2"></span></div>
+      <div class="result-row"><span>Subject 3</span><span id="res-mark3"></span></div>
+      <div class="result-row"><span>Average</span><span id="res-avg"></span></div>
+      <div class="result-row">
+        <span>Grade</span>
+        <span id="res-grade" class="grade-badge"></span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function calculate() {
+      const name  = document.getElementById('name').value.trim();
+      const mark1 = parseFloat(document.getElementById('mark1').value);
+      const mark2 = parseFloat(document.getElementById('mark2').value);
+      const mark3 = parseFloat(document.getElementById('mark3').value);
+
+      const errorBox  = document.getElementById('error');
+      const resultBox = document.getElementById('result');
+
+      errorBox.style.display  = 'none';
+      resultBox.style.display = 'none';
+
+      // VALIDATION - same rules as the C# constructor
+      if (!name) {
+        showError("Student name cannot be empty."); return;
+      }
+      if (/\d/.test(name)) {
+        showError("Student name cannot contain numbers."); return;
+      }
+      if (isNaN(mark1) || mark1 < 0 || mark1 > 100) {
+        showError("Subject 1 mark must be between 0 and 100."); return;
+      }
+      if (isNaN(mark2) || mark2 < 0 || mark2 > 100) {
+        showError("Subject 2 mark must be between 0 and 100."); return;
+      }
+      if (isNaN(mark3) || mark3 < 0 || mark3 > 100) {
+        showError("Subject 3 mark must be between 0 and 100."); return;
+      }
+
+      // CALCULATE - same logic as CalculateAverage() in Student.cs
+      const average = (mark1 + mark2 + mark3) / 3;
+
+      // GET GRADE - same logic as GetGrade() in Student.cs
+      let grade = '';
+      if      (average >= 80) grade = 'A';
+      else if (average >= 70) grade = 'B';
+      else if (average >= 60) grade = 'C';
+      else if (average >= 50) grade = 'D';
+      else                    grade = 'F';
+
+      // DISPLAY RESULTS
+      document.getElementById('res-name').textContent  = name;
+      document.getElementById('res-mark1').textContent = mark1 + '%';
+      document.getElementById('res-mark2').textContent = mark2 + '%';
+      document.getElementById('res-mark3').textContent = mark3 + '%';
+      document.getElementById('res-avg').textContent   = average.toFixed(1) + '%';
+
+      const gradeEl = document.getElementById('res-grade');
+      gradeEl.textContent  = grade;
+      gradeEl.className    = 'grade-badge grade-' + grade;
+
+      resultBox.style.display = 'block';
+    }
+
+    function showError(msg) {
+      const errorBox = document.getElementById('error');
+      errorBox.textContent    = '⚠️ ' + msg;
+      errorBox.style.display  = 'block';
+    }
+  </script>
+</body>
+</html>
