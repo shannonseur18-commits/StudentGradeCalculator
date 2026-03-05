@@ -17,6 +17,9 @@ public class Student
 
         if (name.Any(char.IsDigit))
             throw new ArgumentException("Student name cannot contain numbers.");
+        
+        if (name.Length < 2)
+           throw new ArgumentException("Student name must be at least 2 characters.");
 
         // Validate marks - must be between 0 and 100
         if (mark1 < 0 || mark1 > 100)
@@ -52,3 +55,4 @@ public class Student
         else return "F";
     }
 }
+
