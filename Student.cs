@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Linq;
 
 public class Student
 {
@@ -11,15 +12,21 @@ public class Student
     // CONSTRUCTOR - validation happens here at the door
     public Student(string name, double mark1, double mark2, double mark3)
     {
-        // Validate name
+        // Check name is not empty
         if (string.IsNullOrEmpty(name))
             throw new ArgumentException("Student name cannot be empty.");
 
+        // Check name has no numbers
         if (name.Any(char.IsDigit))
             throw new ArgumentException("Student name cannot contain numbers.");
-        
-        if (name.Length < 2)
-           throw new ArgumentException("Student name must be at least 2 characters.");
+
+        // Check name is at least 3 characters
+        if (name.Length < 3)
+            throw new ArgumentException("Student name must be at least 3 characters.");
+
+        // Check name has at least one vowel - TTT, QQQ etc are not real names
+        if (!name.Any(c => "aeiouAEIOU".Contains(c)))
+            throw new ArgumentException("Please enter a valid name.");
 
         // Validate marks - must be between 0 and 100
         if (mark1 < 0 || mark1 > 100)
@@ -31,7 +38,7 @@ public class Student
         if (mark3 < 0 || mark3 > 100)
             throw new ArgumentException("Mark 3 must be between 0 and 100.");
 
-        Name = name;
+        Name  = name;
         Mark1 = mark1;
         Mark2 = mark2;
         Mark3 = mark3;
@@ -55,4 +62,3 @@ public class Student
         else return "F";
     }
 }
-
