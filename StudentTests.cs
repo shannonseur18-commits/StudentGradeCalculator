@@ -79,5 +79,16 @@ public class StudentTests
         {
             Student student = new Student("Shannon", -10, 75, 80);
         });
+        
+        // TEST 8: Single letter name should throw error
+[Test]
+public void Constructor_SingleLetterName_ThrowsException()
+{
+    Assert.Throws<ArgumentException>(() =>
+    {
+        Student student = new Student("S", 60, 75, 80);
+    });
+}
     }
 }
+
